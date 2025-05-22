@@ -7,7 +7,7 @@
 <h5 align="center"> 
 
 <a href='https://arxiv.org/abs/'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a>
-<a href='https://huggingface.co/'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'>
+<a href='https://huggingface.co/hmhm1229/R1-Router'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'>
 
 [Chunyi Peng]()<sup>1</sup>,
 [Zhipeng Xu]()<sup>1</sup>,
