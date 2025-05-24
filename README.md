@@ -2,7 +2,6 @@
 
 <h1> R1-Router: Learning to Route Queries Across Knowledge Bases for Step-wise Retrieval-Augmented Reasoning </h1>
 
-<h5 align="center"> If you find this project useful, please give us a star🌟.
 
 <h5 align="center"> 
 
@@ -20,7 +19,9 @@
 [Ge Yu]()<sup>1</sup>
 [Maosong Sun]()<sup>2</sup>
 
-<sup>1</sup>[Northeastern University](https://www.neu.edu.cn/), <sup>2</sup>[Tsinghua University](https://www.tsinghua.edu.cn/en/), <sup>3</sup>[ModleBest.Inc](https://modelbest.cn/)
+<sup>1</sup>Northeastern University, <sup>2</sup>Tsinghua University, <sup>3</sup>ModleBest.Inc
+
+<h5 align="center"> If you find this project useful, please give us a star🌟.
 </h5>
 </div>
 
