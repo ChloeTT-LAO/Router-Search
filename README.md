@@ -68,7 +68,7 @@ bash src/data_synthesis/data_synthesis.sh
 Our training framework is based on [EasyR1](https://github.com/hiyouga/EasyR1), only you need to do is to download it and replace some files with the files in `./Easy-R1`.
 Then start training with the command:
 ```bash
-conda activate ag
+conda activate router
 bash examples/run_qwen2_5_vl_7b_stepgrpo.sh
 ```
 ## Evaluation
