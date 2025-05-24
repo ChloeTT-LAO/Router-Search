@@ -329,7 +329,7 @@ def dataset_evaluate(dataset, method, model_name):
 def parse_arguments():
     parser = argparse.ArgumentParser(description="evaluate")
     parser.add_argument("--dataset_name", type=str, default="all")
-    parser.add_argument("--method", type=str, default="r1_router3")
+    parser.add_argument("--method", type=str, default="r1-router3")
     parser.add_argument("--model_name", type=str, default="r1-router")
     return parser.parse_args()
 

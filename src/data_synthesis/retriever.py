@@ -285,7 +285,6 @@ if __name__ == "__main__":
     if mode == "retrieve":
         from ..bge_embedding import encode
 
-        retrievers = [f'common_knowledge_retriever_{step}', f'text_image_retriever_{step}']
         print(f"[INFO] Top-K: {k}")
         print(f"[INFO] Method: {method}\n")
 

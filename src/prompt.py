@@ -237,3 +237,20 @@ Strict Output Format:
 [Provide the final answer based solely on the information before.]
 </answer>
 """
+
+
+def convert(msgs):
+    qw_prompt = []
+    for msg in msgs:
+        m = {}
+
+        m['role'] = msg['role']
+
+        m['content'] = ""
+        for cont in msg['content']:
+            if cont['type'] == "text":
+                m['content'] += cont["text"]
+
+        qw_prompt.append(m)
+
+    return qw_prompt

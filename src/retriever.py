@@ -31,69 +31,15 @@ image_root = {
     'webqa': "/path/to/webqa",
 }
 
-def wiki_passages_filter(directory):
-    passages = []
-    if os.path.exists('/path/to/wiki_extract.jsonl'):
-        print('file exist')
-        exit()
-        
-    with open(f'/path/to/wiki_extract.jsonl', 'w', encoding='utf-8') as output_file:
-        for root, dirs, files in os.walk(directory):
-            for file in files:
-                if file.startswith('wiki_'):
-                    file_path = os.path.join(root, file)
-                    with open(file_path, 'r', encoding='utf-8') as f:
-                        content = f.read()
-                        docs = content.split('</doc>')
-                        for doc in docs:
-                            if '<doc' in doc:
-                                spl = doc.split('>')[0].split('"')
-                                _id = spl[1]
-                                _title = spl[5]
-                                if '(disambiguation)' in _title.lower():
-                                    continue
-                                if '(disambiguation page)' in _title.lower():
-                                    continue
-                                if re.match(r'(List of .+)|(Index of .+)|(Outline of .+)', _title):
-                                    continue
-                                text = doc.split('>')[1].strip()
-                                if not text:
-                                    continue
-                                data = {'id': _title, 'text': text}
-                                json.dump(data, output_file, ensure_ascii=False)
-                                output_file.write('\n')
-    print("[INFO] wiki passages filtered") 
-    return passages
-
-
-def split_text_with_window(text, title, window_size=100, step_size=50):
-    words = text.split()
-    if len(words) <= 5:
-        return []
-    if len(words) <= window_size:
-        return [text]
-    
-    segments = []
-    for i in range(0, len(words) - window_size + 1, step_size):
-        segment = " ".join(words[i:i + window_size])
-        segments.append(f"{title} {segment}")
-    
-    if len(words) % window_size != 0:
-        last_segment = " ".join(words[-window_size:])
-        segments.append(f"{title} {last_segment}")
-    
-    return segments
-
-
-def wikidata_w100_extract():
+def wikidata_load():
     all_segments = []
 
-    with (open('/path/to/wiki_filter.jsonl', 'r') as infile):
+    with (open('/path/to/wiki_extract.jsonl', 'r') as infile):
         for line in infile:
             data = json.loads(line.strip())
             all_segments.append(data['text'])
 
-    print("[INFO] wiki passages w100 extracted") 
+    print("[INFO] wiki passages extracted")
     return all_segments
 
 
@@ -219,57 +165,6 @@ def convert_ndarray_to_list(obj):
         return obj
 
 
-def index():
-    base = 0
-    for chunk_count in range(9, 18):
-        embedding_list = np.load(f'/path/to/embeded_wiki_{chunk_count}.npy').astype('float32')
-        print("[INFO] ", chunk_count, embedding_list.shape)
-        
-        hashed_id_list = np.arange(base, base + embedding_list.shape[0], dtype='int64')
-        base += embedding_list.shape[0]
-
-        np.save(f'/path/to/hashed_id_wiki_{chunk_count}.npy', hashed_id_list)
-        assert len(hashed_id_list) == len(set(hashed_id_list)), "IDs should be unique"
-
-        # Normalize the embeddings
-        faiss.normalize_L2(embedding_list)
-
-        # Dimension of the embeddings
-        d = embedding_list.shape[1]
-
-        # Create the FAISS index on the CPU
-        metric = faiss.METRIC_INNER_PRODUCT
-        cpu_index = faiss.index_factory(
-            d,
-            "IDMap,Flat",
-            metric,
-        )
-
-        print("Creating FAISS index with the following parameters:")
-        print(f"Index type: Flat")
-        print(f"Metric: {metric}")
-        print(f"Dimension: {d}")
-
-        # Distribute the index across multiple GPUs
-        ngpus = faiss.get_num_gpus()
-        print(f"Number of GPUs used for indexing: {ngpus}")
-        co = faiss.GpuMultipleClonerOptions()
-        co.shard = True
-        index_gpu = faiss.index_cpu_to_all_gpus(cpu_index, co=co, ngpu=ngpus)
-
-        # Add data to the GPU index
-        index_gpu.add_with_ids(embedding_list, hashed_id_list)
-
-        # Transfer the GPU index back to the CPU for saving
-        index_cpu = faiss.index_gpu_to_cpu(index_gpu)
-
-        index_path = f'/path/to/indexed_wiki_{chunk_count}.index'
-
-        faiss.write_index(index_cpu, index_path)
-        print(f"Successfully indexed {index_cpu.ntotal} documents")
-        print(f"Index saved to: {index_path}")
-
-
 def table_retriever(table_query, k=10):
     encoder_name = "google-bert/bert-large-uncased"
     question_tokenizer = AutoTokenizer.from_pretrained(encoder_name)
@@ -344,7 +239,7 @@ def retrieve_chunk(query_embeddings, batch_size=10, k=10):
     all_distance = np.hstack(all_distance)
     all_indeces = np.hstack(all_indeces)
     
-    wiki_passages = wikidata_w100_extract()        
+    wiki_passages = wikidata_load()
     for i, distance in enumerate(all_distance):
         top_k_distance_idx = np.argsort(distance)[::-1][:k]
         retrieved_data.append([wiki_passages[indices] for indices in all_indeces[i][top_k_distance_idx]])  
@@ -360,13 +255,13 @@ def retrieve_chunk(query_embeddings, batch_size=10, k=10):
             
 def parse_arguments():
     parser = argparse.ArgumentParser(description="retrieve pipeline")
-    parser.add_argument("--mode", type=str, default="embed")
-    parser.add_argument("--method", type=str, default="r1_router")
+    parser.add_argument("--mode", type=str, default="retrieve")
+    parser.add_argument("--method", type=str, default="r1-router")
     parser.add_argument("--step", type=int, default=0)
     parser.add_argument("--max_step", type=int, default=5)
     parser.add_argument("--k", type=int, default=10)
     parser.add_argument("--dataset_name", type=str, default="all")
-    parser.add_argument("--model_name", type=str, default="r1_router")
+    parser.add_argument("--model_name", type=str, default="r1-router")
     parser.add_argument("--ret_type", type=str, default="text")
     return parser.parse_args()
 
@@ -394,17 +289,7 @@ if __name__ == "__main__":
         dataset_name = [dataset_name]
     
     print(f"[INFO] Dataset: {dataset_name}")
-    if mode == "embed":
-        print(f"[INFO] Corpus: {corpus}")
-        from bge_embedding import encode
-        segment = wikidata_w100_extract()
-        print(len(segment))
-
-                         
-    elif mode == "index":
-        index()
-        
-    elif mode == "retrieve":
+    if mode == "retrieve":
         from bge_embedding import encode
         print(f"[INFO] Top-K: {k}")
         print(f"[INFO] Method: {method}\n")
@@ -420,7 +305,7 @@ if __name__ == "__main__":
         }
         for dataset in dataset_name:
 
-            if method == "r1_router":
+            if method == "r1-router":
                 file_name = f"{dataset}_{method}_step_{step}.jsonl"
                 file_name = os.path.join(r1_router_root, file_name)
                 retrieve_func = query_retrieve_per_retriever
@@ -440,7 +325,7 @@ if __name__ == "__main__":
         
         print("[INFO] writing jsonl")
         for dataset in dataset_name:
-            if method == "r1_router":
+            if method == "r1-router":
                 output_name = f"{dataset}_retrieve_{method}_step_{step}.jsonl"
             with open(os.path.join(root2, output_name), 'w', encoding='utf-8') as o:
                 for line in data_dataset[dataset]:

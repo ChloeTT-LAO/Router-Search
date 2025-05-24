@@ -4,7 +4,7 @@ import os
 import numpy as np
 import torch
 from transformers import AutoModel, AutoTokenizer, AutoProcessor, AutoModelForCausalLM
-from ..prompt import r1_router_fewshot_msgs
+from ..prompt import r1_router_fewshot_msgs, get_answer_prompt, get_final_answer_prompt, convert
 import re
 from qwen_vl_utils import process_vision_info
 
@@ -20,8 +20,9 @@ dataset_path = {
 
 model = None
 processor = None
+tokenizer = None
 def initialize(dataset_name):
-    global model, processor
+    global model, processor, tokenizer
     if dataset_name == 'infoseek':
         from transformers import Qwen2_5_VLForConditionalGeneration
 
@@ -34,6 +35,14 @@ def initialize(dataset_name):
         processor = AutoProcessor.from_pretrained("Qwen/Qwen2.5-VL-7B-Instruct")
         return "qwen2.5-vl"
     else:
+        model = AutoModelForCausalLM.from_pretrained(
+            "deepseek-ai//DeepSeek-R1-Distill-Qwen-32B",
+            torch_dtype=torch.bfloat16,
+            device_map="auto",
+            trust_remote_code=True,
+            attn_implementation="flash_attention_2",
+        )
+        tokenizer = AutoTokenizer.from_pretrained("deepseek-ai//DeepSeek-R1-Distill-Qwen-32B")
         return "r1-32b"
 
 
@@ -107,7 +116,25 @@ def get_llm_response(model_name, msgs):
                                              clean_up_tokenization_spaces=False)
         return output_text[0]
     else:
-        raise ValueError
+        msgs = convert(msgs)
+        text = tokenizer.apply_chat_template(
+            msgs,
+            tokenize=False,
+            add_generation_prompt=True
+        )
+
+        model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
+
+        generated_ids = model.generate(
+            **model_inputs,
+            max_new_tokens=2048,
+        )
+        generated_ids = [
+            output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
+        ]
+
+        response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        return response
 
 
 def dataset_load(dataset, method, step=0, max_step=0, model_name='qwen'):
@@ -167,11 +194,11 @@ def get_answer(msg, model_name='qwen', final=False):
 
     if final:
         msgs = [{'role': 'system', 'content': [
-            {"type": "text", "text": prompt.get_final_answer_prompt}
+            {"type": "text", "text": get_final_answer_prompt}
         ]}]
     else:
         msgs = [{'role': 'system', 'content': [
-            {"type": "text", "text": prompt.get_answer_prompt}
+            {"type": "text", "text": get_answer_prompt}
         ]}]
     msgs.extend(msg)
     cnt = 0
@@ -289,7 +316,7 @@ def gen(dataset, step, method, max_step, model_name):
 def parse_arguments():
     parser = argparse.ArgumentParser(description="rag pipeline")
     parser.add_argument("--dataset_name", type=str, default="all")
-    parser.add_argument("--method", type=str, default="mrrags")
+    parser.add_argument("--method", type=str, default="r1-router")
     parser.add_argument("--step", type=int, default=0)
     parser.add_argument("--model_name", type=str, default="qwen2.5")
     parser.add_argument("--max_step", type=int, default=5)

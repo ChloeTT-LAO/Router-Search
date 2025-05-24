@@ -57,8 +57,35 @@ For the Table Retriever, you can train it with the help of the [repository](http
 ## Training
 If you do not want to train the model, you can download [R1-Router](https://huggingface.co/hmhm1229/R1-Router) and skip this section to [Evaluation](#evaluation)
 ### Data Synthesis
-If you want to use the ready-to-use synthetic data directy, you can skip this section to [Step-GRPO Training](#step-grpo-training)
+If you want to use the ready-to-use synthetic data directly, you can skip this section to [Step-GRPO Training](#step-grpo-training)
 
+First, we need to synthesis the data step by step:
+```bash
+bash src/data_synthesis/data_synthesis.sh
+```
 ### Step-GRPO Training
-
+Our training framework is based on [EasyR1](https://github.com/hiyouga/EasyR1), only you need to do is to download it and replace some files with the files in `./Easy-R1`.
+Then start training with the command:
+```bash
+conda activate ag
+bash examples/run_qwen2_5_vl_7b_stepgrpo.sh
+```
 ## Evaluation
+We provide the evaluation pipeline for the R1-Router:
+```bash
+bash evaluation.sh
+```
+
+## Acknowledgement 
+Our work is built on the following codebases, and we are deeply grateful for their contributions.
+- [EasyR1](https://github.com/hiyouga/EasyR1)
+- [UniIR](https://huggingface.co/TIGER-Lab/UniIR)
+- [Open-WikiTable](https://github.com/sean0042/Open_WikiTable)
+- [OmniSearch](https://github.com/Alibaba-NLP/OmniSearch)
+
+## Citation
+```
+@artile{
+  
+}
+```

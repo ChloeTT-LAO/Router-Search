@@ -12,6 +12,8 @@ import prompt
 from transformers import AutoModel, AutoTokenizer, AutoProcessor, AutoModelForCausalLM
 from qwen_vl_utils import process_vision_info
 
+from src.data_synthesis.retriever import dataset
+
 model = None
 tokenizer = None
 processor = None
@@ -47,12 +49,12 @@ def initialize_llm(model_name):
     elif model_name == "r1-router":
         from transformers import Qwen2_5_VLForConditionalGeneration
         model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
-            "OpenBMB/R1-Router",
+            "hmhm1229/R1-Router",
             torch_dtype=torch.bfloat16,
             attn_implementation="flash_attention_2",
             device_map="auto"
         )
-        processor = AutoProcessor.from_pretrained("OpenBMB/R1-Router")
+        processor = AutoProcessor.from_pretrained("hmhm1229/R1-Router")
 
 
 def convert_ndarray_to_list(obj):
@@ -239,7 +241,7 @@ def r1_router(dataset, step, method, max_step, model_name, count=1000):
     if step == max_step:
         file_name = f'./results/{model_name}/{dataset}_{method}{max_step}.jsonl'
     else:
-        file_name = f'./results/{model_name}/r1_router_steps/{dataset}_{method}_step_{step+1}.jsonl'
+        file_name = f'./results/{model_name}/r1-router_steps/{dataset}_{method}_step_{step+1}.jsonl'
     with open(file_name, 'w', encoding='utf-8') as output_file:
         for example in problems:
             if step != 0:
@@ -330,15 +332,18 @@ def main():
     print(f"[INFO] Method: {method}")
     print(f"[INFO] Dataset name: {dataset_name}")
     print(f"[INFO] Model name: {model_name}")
-    initialize_llm(model_name)    
-    
+    initialize_llm(model_name)
+    if dataset_name == "all":
+        dataset_name = ['2wikimultihopqa', 'dyn_vqa', 'infoseek', 'openwikitqa', 'webqa', 'tabfact']
+    else:
+        dataset_name = [dataset_name]
     if method == "r1-router":
         step = args.step
         max_step = args.max_step
         print(f"[INFO] Step: {step}")
         print(f"[INFO] Max step: {max_step}")
-
-        r1_router(dataset_name, step, method, max_step, model_name)
+        for dataset in dataset_name:
+            r1_router(dataset, step, method, max_step, model_name)
 
 if __name__ == "__main__":
     main()
