@@ -24,10 +24,41 @@
 </h5>
 </div>
 
-## Requirement
+## Environment
+For training, answer generation, and evaluation processes:
 ```bash
-pip install requirements.txt
+conda create -n ag python=3.11
+conda activate ag
+pip install requirements_ag.txt
 ```
-**Details** 
-- 1
-##
+For retriever and corpus construction processes:
+```bash
+conda create -n retrieve python=3.11
+conda activate retieve
+pip install requirements_r.txt
+```
+
+## Corpora Construction
+For the text corpus, you can download `enwiki-20241020` from [Google Drive](https://). Then preprocess, and index it with the following commands:
+```bash
+conda activate retrieve
+wikiextractor enwiki-20241020-pages-articles-multistream.xml.bz2 -o wiki_extracted
+python wiki_preprocess.py
+```
+For the image corpus, you can directly download [M-BEIR](https://huggingface.co/datasets/TIGER-Lab/M-BEIR). To embed and index it you can follow the [repository](https://github.com/TIGER-AI-Lab/UniIR)
+
+For the table corpus, you can download, embed and index Open-WikiTable following the [repository](https://github.com/sean0042/Open_WikiTable), or you can download directly the one we have already preprocessed from [here](https://huggingface.co/hmhm1229/table-retriever). 
+
+## Retrievers
+For the Text-Image Retriever, you can directly download [UniIR](https://huggingface.co/TIGER-Lab/UniIR)
+
+For the Table Retriever, you can train it with the help of the [repository](https://github.com/sean0042/Open_WikiTable), or you can download it directly from [here](https://huggingface.co/hmhm1229/table-retriever). 
+
+## Training
+If you do not want to train the model, you can download [R1-Router](https://huggingface.co/hmhm1229/R1-Router) and skip this section to [Evaluation](#evaluation)
+### Data Synthesis
+If you want to use the ready-to-use synthetic data directy, you can skip this section to [Step-GRPO Training](#step-grpo-training)
+
+### Step-GRPO Training
+
+## Evaluation
