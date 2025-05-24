@@ -27,21 +27,21 @@
 ## Environment
 For training, answer generation, and evaluation processes:
 ```bash
-conda create -n ag python=3.11
-conda activate ag
+conda create -n router python=3.11
+conda activate router
 pip install requirements_ag.txt
 ```
 For retriever and corpus construction processes:
 ```bash
-conda create -n retrieve python=3.11
-conda activate retieve
+conda create -n retriever python=3.11
+conda activate retiever
 pip install requirements_r.txt
 ```
 
 ## Corpora Construction
 For the text corpus, you can download `enwiki-20241020` from [Google Drive](https://). Then preprocess, and index it with the following commands:
 ```bash
-conda activate retrieve
+conda activate retriever
 wikiextractor enwiki-20241020-pages-articles-multistream.xml.bz2 -o wiki_extracted
 python wiki_preprocess.py
 ```
