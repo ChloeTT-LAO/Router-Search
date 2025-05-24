@@ -8,16 +8,16 @@
 <a href='https://arxiv.org/abs/'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a>
 <a href='https://huggingface.co/hmhm1229/R1-Router'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'>
 
-[Chunyi Peng]()<sup>1</sup>,
-[Zhipeng Xu]()<sup>1</sup>,
-[Zhenghao Liu](https://edwardzh.github.io/)<sup>1</sup>,
-[Yishan Li]()<sup>3</sup>,
-[Yukun Yan]()<sup>2</sup>,
-[Zhiyuan Liu]()<sup>2</sup>,
-[Yu Gu]()<sup>1</sup>
-[Minghe Yu]()<sup>1</sup>
-[Ge Yu]()<sup>1</sup>
-[Maosong Sun]()<sup>2</sup>
+Chunyi Peng<sup>1</sup>,
+Zhipeng Xu<sup>1</sup>,
+Zhenghao Liu<sup>1</sup>,
+Yishan Li<sup>3</sup>,
+Yukun Yan<sup>2</sup>,
+Zhiyuan Liu<sup>2</sup>,
+Yu Gu<sup>1</sup>
+Minghe Yu<sup>1</sup>
+Ge Yu<sup>1</sup>
+Maosong Sun<sup>2</sup>
 
 <sup>1</sup>Northeastern University, <sup>2</sup>Tsinghua University, <sup>3</sup>ModleBest.Inc
 
@@ -50,7 +50,7 @@ For the image corpus, you can directly download [M-BEIR](https://huggingface.co/
 
 For the table corpus, you can download, embed and index Open-WikiTable following the [repository](https://github.com/sean0042/Open_WikiTable), or you can download directly the one we have already preprocessed from [here](https://huggingface.co/hmhm1229/table-retriever). 
 
-## Retrievers
+## Retrievers Preparation
 For the Text-Image Retriever, you can directly download [UniIR](https://huggingface.co/TIGER-Lab/UniIR)
 
 For the Table Retriever, you can train it with the help of the [repository](https://github.com/sean0042/Open_WikiTable), or you can download it directly from [here](https://huggingface.co/hmhm1229/table-retriever). 
@@ -89,4 +89,10 @@ Our work is built on the following codebases, and we are deeply grateful for the
 @artile{
   
 }
+```
+
+## Contact Us
+If you have questions, suggestions, and bug reports, please email us, we will try our best to help you.
+```
+hm.cypeng@gmail.com
 ```
