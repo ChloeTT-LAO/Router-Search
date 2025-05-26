@@ -19,7 +19,7 @@ Minghe Yu<sup>1</sup>
 Ge Yu<sup>1</sup>
 Maosong Sun<sup>2</sup>
 
-<sup>1</sup>Northeastern University, <sup>2</sup>Tsinghua University, <sup>3</sup>ModleBest.Inc
+<sup>1</sup>Northeastern University, <sup>2</sup>Tsinghua University, <sup>3</sup>ModleBest Inc.
 
 <h5 align="center"> If you find this project useful, please give us a star🌟.
 </h5>
@@ -30,13 +30,13 @@ For training, answer generation, and evaluation processes:
 ```bash
 conda create -n router python=3.11
 conda activate router
-pip install requirements_ag.txt
+pip install requirements_router.txt
 ```
 For retriever and corpus construction processes:
 ```bash
 conda create -n retriever python=3.11
-conda activate retiever
-pip install requirements_r.txt
+conda activate retriever
+pip install requirements_retriever.txt
 ```
 
 ## Corpora Construction
