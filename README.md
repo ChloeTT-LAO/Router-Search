@@ -76,6 +76,12 @@ We provide the evaluation pipeline for the R1-Router:
 ```bash
 bash evaluation.sh
 ```
+or, you can just evaluate the results we provided by:
+```bash
+conda activate router
+cd src
+python evaluate.py --dataset_name all --method "r1-router3"
+```
 
 ## Acknowledgement 
 Our work is built on the following codebases, and we are deeply grateful for their contributions.
@@ -85,6 +91,7 @@ Our work is built on the following codebases, and we are deeply grateful for the
 - [OmniSearch](https://github.com/Alibaba-NLP/OmniSearch)
 
 ## Citation
+We appreciate your citations if you find our paper related and useful to your research!
 ```
 @artile{
   

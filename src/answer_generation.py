@@ -25,11 +25,11 @@ webqa_root = f"{base_root}/webqa"
 
 dataset_path = {
     'dyn_vqa': 'DynVQA_en.202412.jsonl',
-    "infoseek": 'infoseek_val_3000.jsonl',
-    'openwikitqa': 'openwikitqa_valid.jsonl',
-    '2wikimultihopqa': '2wikimultihopqa.jsonl',
-    'webqa': 'webqa_dev.jsonl',
-    'tabfact': 'tabfact_dev.jsonl',
+    "infoseek": 'infoseek_val.jsonl',
+    'openwikitqa': 'openwikitqa_val.jsonl',
+    '2wikimultihopqa': '2wikimultihopqa_val.jsonl',
+    'webqa': 'webqa_val.jsonl',
+    'tabfact': 'tabfact_val.jsonl',
 }
 k = 5
 

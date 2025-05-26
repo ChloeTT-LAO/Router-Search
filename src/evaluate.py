@@ -288,7 +288,7 @@ def evaluate(output, answer):
 
 def dataset_evaluate(dataset, method, model_name):
     rec_list = []
-    with (open(os.path.join(root, model_name, f"{dataset}_{method}.jsonl"), 'r') as f):
+    with (open(os.path.join(root, model_name, f"{dataset}_{method}.jsonl"), 'r', encoding='utf-8') as f):
         for line in f:
             data = json.loads(line.strip())
             if isinstance(data['llm_answer'], str):
