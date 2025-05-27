@@ -40,7 +40,7 @@ pip install requirements_retriever.txt
 ```
 
 ## Corpora Construction
-For the text corpus, you can download `enwiki-20241020` from [Google Drive](https://). Then preprocess, and index it with the following commands:
+For the text corpus, you can download `enwiki-20241020` from [Huggingface](https://huggingface.co/datasets/hmhm1229/enwiki-20241020). Then preprocess, and index it with the following commands:
 ```bash
 conda activate retriever
 wikiextractor enwiki-20241020-pages-articles-multistream.xml.bz2 -o wiki_extracted
@@ -53,7 +53,13 @@ For the table corpus, you can download, embed and index Open-WikiTable following
 ## Retrievers Preparation
 For the Text-Image Retriever, you can directly download [UniIR](https://huggingface.co/TIGER-Lab/UniIR)
 
-For the Table Retriever, you can train it with the help of the [repository](https://github.com/sean0042/Open_WikiTable), or you can download it directly from [here](https://huggingface.co/hmhm1229/table-retriever). 
+For the Table Retriever, you can train it with the help of [repository](https://github.com/sean0042/Open_WikiTable), or you can download it directly from [here](https://huggingface.co/hmhm1229/table-retriever). 
+
+## Datasets
+We have prepared all the text datasets in `./datasets`, for images you need to download them from:
+- `InfoSeek:` InfoSeek images can be downloaded from [OVEN](https://github.com/open-vision-language/oven/tree/main/image_downloads)
+- `Dyn-VQA:` Dynamic VQA images can be downloaded from [DynVQA_en.202412](https://github.com/Alibaba-NLP/OmniSearch/blob/main/dataset/DynVQA_en/DynVQA_en.202412.jsonl)
+- `WebQA:` WebQA images can be downloaded from [Google Drive](https://drive.google.com/drive/folders/19ApkbD5w0I5sV1IeQ9EofJRyAjKnA7tb)
 
 ## Training
 If you do not want to train the model, you can download [R1-Router](https://huggingface.co/hmhm1229/R1-Router) and skip this section to [Evaluation](#evaluation)
@@ -76,7 +82,7 @@ We provide the evaluation pipeline for the R1-Router:
 ```bash
 bash evaluation.sh
 ```
-or, you can just evaluate the results we provided by:
+or, you can just evaluate the results we have provided by:
 ```bash
 conda activate router
 cd src
