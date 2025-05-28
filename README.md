@@ -101,7 +101,7 @@ We appreciate your citations if you find our paper related and useful to your re
 ```
 @inproceedings{peng2025r1,
   title={Learning to Route Queries across Knowledge Bases for Step-wise Retrieval-Augmented Reasoning},
-  author={Peng, Chunyi and Xu, Zhipeng and Liu, Zhenghao and Li, Yishan and Yan, Yukun and Shuo, Wang and Liu, Zhiyuan and Gu, Yu and Yu, Minghe and Yu, Ge and Sun, Maosong},
+  author={Peng, Chunyi and Xu, Zhipeng and Liu, Zhenghao and Li, Yishan and Yan, Yukun and Wang, Shuo and Liu, Zhiyuan and Gu, Yu and Yu, Minghe and Yu, Ge and Sun, Maosong},
   year={2025}
 }
 ```
