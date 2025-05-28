@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1> R1-Router: Learning to Route Queries Across Knowledge Bases for Step-wise Retrieval-Augmented Reasoning </h1>
+<h1> R1-Router: Learning to Route Queries across Knowledge Bases for Step-wise Retrieval-Augmented Reasoning </h1>
 
 
 <h5 align="center"> 
@@ -99,8 +99,10 @@ Our work is built on the following codebases, and we are deeply grateful for the
 ## Citation
 We appreciate your citations if you find our paper related and useful to your research!
 ```
-@artile{
-  
+@inproceedings{peng2025r1,
+  title={Learning to Route Queries across Knowledge Bases for Step-wise Retrieval-Augmented Reasoning},
+  author={Peng, Chunyi and Xu, Zhipeng and Liu, Zhenghao and Li, Yishan and Yan, Yukun and Shuo, Wang and Liu, Zhiyuan and Gu, Yu and Yu, Minghe and Yu, Ge and Sun, Maosong},
+  year={2025}
 }
 ```
 
