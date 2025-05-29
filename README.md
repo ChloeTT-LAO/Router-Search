@@ -5,7 +5,7 @@
 
 <h5 align="center"> 
 
-<a href='https://arxiv.org/abs/'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a>
+<a href='https://arxiv.org/abs/2505.22095'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a>
 <a href='https://huggingface.co/hmhm1229/R1-Router'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'>
 
 Chunyi Peng<sup>1</sup>,
@@ -42,6 +42,7 @@ pip install requirements_retriever.txt
 ## Corpora Construction
 For the text corpus, you can download `enwiki-20241020` from [Huggingface](https://huggingface.co/datasets/hmhm1229/enwiki-20241020). Then preprocess, and index it with the following commands:
 ```bash
+7z x enwiki-20241020-pages-articles-multistream.xml.zip.001 
 conda activate retriever
 wikiextractor enwiki-20241020-pages-articles-multistream.xml.bz2 -o wiki_extracted
 python wiki_preprocess.py
@@ -86,7 +87,7 @@ or, you can just evaluate the results we have provided by:
 ```bash
 conda activate router
 cd src
-python evaluate.py --dataset_name all --method "r1-router3"
+python evaluate.py --dataset_name all --model_name "r1-router" --method "r1-router3"
 ```
 
 ## Acknowledgement 
@@ -100,7 +101,7 @@ Our work is built on the following codebases, and we are deeply grateful for the
 We appreciate your citations if you find our paper related and useful to your research!
 ```
 @artile{
-  
+  url={https://arxiv.org/abs/2505.22095}, 
 }
 ```
 
