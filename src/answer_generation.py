@@ -322,6 +322,61 @@ def parse_arguments():
     return parser.parse_args()
 
 
+# 添加MMSearch-R1风格的多模态搜索支持
+def generate_multimodal_search_response(self, query: str, image: Image = None,
+                                        max_search_rounds: int = 5):
+    """
+    融合StepSearch逐步推理和MMSearch-R1多模态搜索
+    """
+    search_history = []
+    reasoning_trajectory = []
+
+    for round_idx in range(max_search_rounds):
+        # Step 1: <reason>分析当前状态</reason>
+        reasoning_output = self._generate_reasoning_step(
+            query, reasoning_trajectory, search_history
+        )
+
+        # Step 2: 决定搜索行动
+        if self._should_search(reasoning_output):
+            # 选择搜索模态和生成查询
+            search_action = self._decide_search_action(reasoning_output, image)
+
+            if search_action['type'] == 'image_search':
+                search_results = self.multimodal_tools.image_search(image)
+            elif search_action['type'] == 'text_search':
+                search_results = self.multimodal_tools.text_search(search_action['query'])
+            else:
+                break  # 不需要搜索，生成最终答案
+
+            # 计算逐步奖励
+            step_reward = self.reward_calculator.compute_step_reward(
+                step_data=search_action,
+                search_results=search_results,
+                search_history=search_history
+            )
+
+            search_history.append({
+                'query': search_action.get('query', ''),
+                'search_type': search_action['type'],
+                'search_results': search_results,
+                'step_reward': step_reward
+            })
+
+        else:
+            # 生成最终答案
+            final_answer = self._generate_final_answer(
+                query, reasoning_trajectory, search_history
+            )
+            break
+
+    return {
+        'final_answer': final_answer,
+        'reasoning_trajectory': reasoning_trajectory,
+        'search_history': search_history
+    }
+
+
 def main():
     args = parse_arguments()
     method = args.method

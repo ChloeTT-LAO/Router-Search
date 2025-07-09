@@ -31,48 +31,49 @@ def split_text_with_window(text, title, window_size=100, step_size=50):
 
 def extract_passages(directory):
     all_segments = []
-    if os.path.exists('/path/to/wiki_extract.jsonl'):
-        with open('/path/to/wiki_extract.jsonl', 'r') as f:
+    if os.path.exists('/Users/chloe/Documents/Academic/AI/Project/CCF-A/R1-Router/datasets/enwiki-20241020/wiki_extract.jsonl'):
+        with open('/Users/chloe/Documents/Academic/AI/Project/CCF-A/R1-Router/datasets/enwiki-20241020/wiki_extract.jsonl', 'r') as f:
             for line in f:
                 all_segments.append(json.loads(line))
 
-    with open(f'/path/to/wiki_extract.jsonl', 'w', encoding='utf-8') as output_file:
-        for root, dirs, files in os.walk(directory):
-            for file in files:
-                if file.startswith('wiki_'):
-                    file_path = os.path.join(root, file)
-                    with open(file_path, 'r', encoding='utf-8') as f:
-                        content = f.read()
-                        docs = content.split('</doc>')
-                        for doc in docs:
-                            if '<doc' in doc:
-                                spl = doc.split('>')[0].split('"')
-                                _id = spl[1]
-                                _title = spl[5]
-                                if '(disambiguation)' in _title.lower():
-                                    continue
-                                if '(disambiguation page)' in _title.lower():
-                                    continue
-                                if re.match(r'(List of .+)|(Index of .+)|(Outline of .+)', _title):
-                                    continue
-                                text = doc.split('>')[1].strip()
-                                if not text:
-                                    continue
-                                if len(text.split()) > 100:
-                                    segments = split_text_with_window(text, id)
-                                    all_segments.extend(segments)
-                                    for seg in segments:
-                                        json.dump({"text": seg}, output_file, ensure_ascii=False)
-                                        output_file.write('\n')
-                                elif len(text.split()) > 7:
-                                    all_segments.append(f"{id} {text}")
-                                    json.dump({"text": f"{id} {text}"}, output_file, ensure_ascii=False)
-                                    output_file.write('\n')
+    # with open(f'/Users/chloe/Documents/Academic/AI/Project/CCF-A/R1-Router/datasets/enwiki-20241020/wiki_extract.jsonl', 'w', encoding='utf-8') as output_file:
+    #     for root, dirs, files in os.walk(directory):
+    #         for file in files:
+    #             if file.startswith('wiki_'):
+    #                 file_path = os.path.join(root, file)
+    #                 with open(file_path, 'r', encoding='utf-8') as f:
+    #                     content = f.read()
+    #                     docs = content.split('</doc>')
+    #                     for doc in docs:
+    #                         if '<doc' in doc:
+    #                             spl = doc.split('>')[0].split('"')
+    #                             _id = spl[1]
+    #                             _title = spl[5]
+    #                             if '(disambiguation)' in _title.lower():
+    #                                 continue
+    #                             if '(disambiguation page)' in _title.lower():
+    #                                 continue
+    #                             if re.match(r'(List of .+)|(Index of .+)|(Outline of .+)', _title):
+    #                                 continue
+    #                             text = doc.split('>')[1].strip()
+    #                             if not text:
+    #                                 continue
+    #                             if len(text.split()) > 100:
+    #                                 segments = split_text_with_window(text, id)
+    #                                 all_segments.extend(segments)
+    #                                 for seg in segments:
+    #                                     json.dump({"text": seg}, output_file, ensure_ascii=False)
+    #                                     output_file.write('\n')
+    #                             elif len(text.split()) > 7:
+    #                                 all_segments.append(f"{id} {text}")
+    #                                 json.dump({"text": f"{id} {text}"}, output_file, ensure_ascii=False)
+    #                                 output_file.write('\n')
 
     print("[INFO] wiki passages filtered")
     return all_segments
 
 def wiki_embed(segment, batch_size):
+    print("Begin Embedding")
     dataloader = DataLoader(
         segment,
         batch_size=batch_size,
@@ -85,14 +86,15 @@ def wiki_embed(segment, batch_size):
         chunk_count += 1
         with torch.no_grad():
             output = encode(batch)
-            file_name = f'./wikipedia/embed/embeded_wiki_{chunk_count}.npy'
+            file_name = f'/Users/chloe/Documents/Academic/AI/Project/CCF-A/R1-Router/datasets/enwiki-20241020/wikipedia/embed/embeded_wiki_{chunk_count}.npy'
             np.save(file_name, output)
 
 
 def index():
+    print("Begin Indexing")
     base = 0
     for chunk_count in range(0, 18):
-        embedding_list = np.load(f'/path/to/wikipedia/embed/embeded_wiki_{chunk_count}.npy').astype(
+        embedding_list = np.load(f'/Users/chloe/Documents/Academic/AI/Project/CCF-A/R1-Router/datasets/enwiki-20241020/wikipedia/embed/embeded_wiki_{chunk_count}.npy').astype(
             'float32')
         print("[INFO] ", chunk_count, embedding_list.shape)
 
@@ -100,7 +102,7 @@ def index():
         base += embedding_list.shape[0]
 
         # hashed_id_list = np.load('./wikipedia/hashed_id_wiki.npy')
-        np.save(f'/path/to/wikipedia/embed/hashed_id_wiki_{chunk_count}.npy', hashed_id_list)
+        np.save(f'/Users/chloe/Documents/Academic/AI/Project/CCF-A/R1-Router/datasets/enwiki-20241020/wikipedia/embed/hashed_id_wiki_{chunk_count}.npy', hashed_id_list)
         assert len(hashed_id_list) == len(set(hashed_id_list)), "IDs should be unique"
 
         # Normalize the embeddings
@@ -135,7 +137,7 @@ def index():
         # Transfer the GPU index back to the CPU for saving
         index_cpu = faiss.index_gpu_to_cpu(index_gpu)
 
-        index_path = f'/path/to/wikipedia/index/indexed_wiki_{chunk_count}.index'
+        index_path = f'/Users/chloe/Documents/Academic/AI/Project/CCF-A/R1-Router/datasets/enwiki-20241020/wikipedia/index/indexed_wiki_{chunk_count}.index'
 
         faiss.write_index(index_cpu, index_path)
         print(f"Successfully indexed {index_cpu.ntotal} documents")
@@ -143,6 +145,6 @@ def index():
 
 
 if __name__ == "__main__":
-    segments = extract_passages('/path/to/wiki_extracted')
-    wiki_embed(segments, 4096*768)
+    segments = extract_passages('/Users/chloe/Documents/Academic/AI/Project/CCF-A/R1-Router/datasets/enwiki-20241020/wiki_extracted')
+    wiki_embed(segments, 32)
     index()

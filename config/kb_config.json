@@ -1,0 +1,35 @@
+{
+    "text_index_path": "./knowledge_bases/text/text_index.faiss",
+    "text_docs_path": "./knowledge_bases/text/text_docs.pkl",
+
+    "image_index_path": "./knowledge_bases/image/image_index.faiss",
+    "image_docs_path": "./knowledge_bases/image/image_docs.pkl",
+
+    "table_index_path": "./knowledge_bases/table/table_index.faiss",
+    "table_docs_path": "./knowledge_bases/table/table_docs.pkl",
+
+    "retriever_configs": {
+        "text_retriever": {
+            "model_name": "BAAI/bge-m3",
+            "max_length": 512,
+            "normalize_embeddings": true
+        },
+        "image_retriever": {
+            "model_name": "TIGER-Lab/UniIR",
+            "max_length": 512,
+            "normalize_embeddings": true
+        },
+        "table_retriever": {
+            "model_name": "hmhm1229/table-retriever",
+            "max_length": 512,
+            "normalize_embeddings": true
+        }
+    },
+
+    "search_settings": {
+        "default_top_k": 5,
+        "max_search_rounds": 5,
+        "information_gain_threshold": 0.1,
+        "redundancy_penalty_threshold": 0.7
+    }
+}

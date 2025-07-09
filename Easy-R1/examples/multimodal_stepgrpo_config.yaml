@@ -1,0 +1,37 @@
+# StepSearch + MMSearch-R1 融合配置
+stage: grpo
+model_name: Qwen/Qwen2.5-VL-7B-Instruct
+dataset: webqa,mmqa
+template: qwen2_vl
+cutoff_len: 8192
+max_samples: 10000
+overwrite_cache: true
+preprocessing_num_workers: 16
+
+# 多模态搜索配置
+multimodal_search:
+  enable_image_search: true
+  enable_text_search: true
+  enable_table_search: true
+  max_search_rounds: 5
+
+# StepSearch逐步奖励配置
+stepwise_rewards:
+  enable: true
+  information_gain_weight: 0.3
+  redundancy_penalty_weight: 0.2
+  routing_accuracy_weight: 0.3
+  answer_quality_weight: 0.2
+
+# GRPO训练参数
+learning_rate: 5.0e-7
+num_train_epochs: 3
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 8
+lr_scheduler_type: cosine
+warmup_steps: 100
+fp16: true
+
+# 多模态特定参数
+image_resolution: 512
+max_image_tokens: 256
